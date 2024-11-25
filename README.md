@@ -1,6 +1,6 @@
 # Bi-Cycle Store
 
-## A Inventory Management Application (Backend Project)
+## An Inventory Management Application (Backend Project)
 
 ---
 
@@ -9,5 +9,12 @@
 - TypeScript
 - Node.js
 - Express.js
-- MongoDB Atlas & Compass
+- MongoDB
 - Mongoose
+
+---
+
+## Tools
+
+- MongoDB Compass
+- Postman
