@@ -24,6 +24,29 @@ const createProduct = async (req: Request, res: Response) => {
   }
 };
 
+const getAllProducts = async (req: Request, res: Response) => {
+  try {
+    const { searchTerm } = req.query;
+    const result = await ProductServices.getAllProductsFromDB(
+      searchTerm as string,
+    );
+
+    res.status(200).json({
+      success: true,
+      message: 'Bicycles retrieved successfully',
+      data: result,
+    });
+  } catch (err) {
+    const error = err as Error;
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Something went wrong',
+      data: error,
+    });
+  }
+};
+
 export const ProductControllers = {
   createProduct,
+  getAllProducts,
 };
