@@ -1,6 +1,6 @@
 # Bi-Cycle Store
 
-## A Inventory management application (Backend Project)
+## A Inventory Management Application (Backend Project)
 
 ---
 
