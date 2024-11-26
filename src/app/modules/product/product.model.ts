@@ -15,11 +15,23 @@ const productSchema = new Schema<TProduct>(
     description: { type: String, required: true },
     quantity: { type: Number, required: true },
     inStock: { type: Boolean, required: true },
+    isDeleted: { type: Boolean, default: false },
   },
   {
     timestamps: true,
   },
 );
+
+// Query Middleware
+productSchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+productSchema.pre('findOne', function (next) {
+  this.findOne({ isDeleted: { $ne: true } });
+  next();
+});
 
 // Create a Model
 export const Product = model<TProduct>('Product', productSchema);
