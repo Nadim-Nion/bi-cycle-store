@@ -4,18 +4,44 @@ import { TProduct } from './product.interface';
 /* This code snippet is defining a Mongoose schema for a product entity. Let's break it down: */
 const productSchema = new Schema<TProduct>(
   {
-    name: { type: String, required: true },
-    brand: { type: String, required: true },
-    price: { type: Number, required: true },
+    name: {
+      type: String,
+      required: [true, 'Product name is required.'],
+    },
+    brand: {
+      type: String,
+      required: [true, 'Brand name is required.'],
+    },
+    price: {
+      type: Number,
+      required: [true, 'Product price is required.'],
+    },
     type: {
       type: String,
-      enum: ['Mountain', 'Road', 'Hybrid', 'BMX', 'Electric'],
-      required: true,
+      enum: {
+        values: ['Mountain', 'Road', 'Hybrid', 'BMX', 'Electric'],
+        message:
+          'Product type must be one of: Mountain, Road, Hybrid, BMX, Electric.',
+      },
+      required: [true, 'Product type is required.'],
     },
-    description: { type: String, required: true },
-    quantity: { type: Number, required: true },
-    inStock: { type: Boolean, required: true },
-    isDeleted: { type: Boolean, default: false },
+    description: {
+      type: String,
+      required: [true, 'Product description is required.'],
+    },
+    quantity: {
+      type: Number,
+      required: [true, 'Product quantity is required.'],
+    },
+    inStock: {
+      type: Boolean,
+      default: true,
+      required: [true, 'Product stock status is required.'],
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
