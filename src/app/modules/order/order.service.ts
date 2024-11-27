@@ -10,7 +10,6 @@ const createOrderIntoDB = async ({
 }: TOrder) => {
   // Find the product
   const productData = await Product.findById(product);
-  //   console.log(productData);
 
   if (!productData) {
     throw new Error('Product not found');
