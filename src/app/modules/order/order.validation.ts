@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import { z } from 'zod';
 
 // Define Zod validation schema for the Order
@@ -8,9 +7,7 @@ const orderValidationSchema = z.object({
     .email({ message: 'Email must be a valid email address' })
     .min(1, { message: 'Email is required' }),
 
-  product: z.string().refine((val) => mongoose.Types.ObjectId.isValid(val), {
-    message: 'Product must be a valid ObjectId',
-  }),
+  product: z.string().min(1, 'product id required').max(50),
 
   quantity: z
     .number()

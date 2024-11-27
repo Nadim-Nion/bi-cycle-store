@@ -1,4 +1,4 @@
-import mongoose, { Schema, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { TOrder } from './order.interface';
 
 /* This code snippet is defining a Mongoose schema for an order document in a MongoDB database. Let's
@@ -10,7 +10,7 @@ const orderSchema = new Schema<TOrder>(
       required: [true, 'Email is required'],
     },
     product: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: 'Product',
       required: [true, 'Product reference is required'],
     },
