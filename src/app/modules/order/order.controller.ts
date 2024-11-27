@@ -43,7 +43,7 @@ const calculateRevenue = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: error.message || 'Something went wrong',
-      data: error,
+      error: error,
     });
   }
 };
