@@ -15,6 +15,7 @@ const productSchema = new Schema<TProduct>(
     price: {
       type: Number,
       required: [true, 'Product price is required.'],
+      min: [0, 'Price must be a positive number'],
     },
     type: {
       type: String,
@@ -32,6 +33,7 @@ const productSchema = new Schema<TProduct>(
     quantity: {
       type: Number,
       required: [true, 'Product quantity is required.'],
+      min: [0, 'Quantity must be a positive number.'],
     },
     inStock: {
       type: Boolean,

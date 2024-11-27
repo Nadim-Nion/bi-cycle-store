@@ -17,10 +17,12 @@ const orderSchema = new Schema<TOrder>(
     quantity: {
       type: Number,
       required: [true, 'Quantity is required'],
+      min: [0, 'Quantity must be a positive number.'],
     },
     totalPrice: {
       type: Number,
       required: [true, 'Total price is required'],
+      min: [0, 'Total price must be a positive number'],
     },
   },
   {
