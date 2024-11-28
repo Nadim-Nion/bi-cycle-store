@@ -27,6 +27,7 @@ const createOrder = async (req: Request, res: Response) => {
       success: false,
       message: error.message || 'Something went wrong',
       data: error,
+      stack: error.stack || 'No stack trace available',
     });
   }
 };
@@ -47,6 +48,7 @@ const calculateRevenue = async (req: Request, res: Response) => {
       success: false,
       message: error.message || 'Something went wrong',
       error: error,
+      stack: error.stack || 'No stack trace available',
     });
   }
 };

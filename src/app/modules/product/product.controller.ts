@@ -23,6 +23,7 @@ const createProduct = async (req: Request, res: Response) => {
       success: false,
       message: error.message || 'Something went wrong',
       data: error,
+      stack: error.stack || 'No stack trace available',
     });
   }
 };
@@ -45,6 +46,7 @@ const getAllProducts = async (req: Request, res: Response) => {
       success: false,
       message: error.message || 'Something went wrong',
       data: error,
+      stack: error.stack || 'No stack trace available',
     });
   }
 };
@@ -66,6 +68,7 @@ const getSingleProduct = async (req: Request, res: Response) => {
       success: false,
       message: error.message || 'Something went wrong',
       data: error,
+      stack: error.stack || 'No stack trace available',
     });
   }
 };
@@ -90,6 +93,7 @@ const updateProduct = async (req: Request, res: Response) => {
       success: false,
       message: error.message || 'Something went wrong',
       data: error,
+      stack: error.stack || 'No stack trace available',
     });
   }
 };
@@ -110,6 +114,7 @@ const deleteProduct = async (req: Request, res: Response) => {
       success: false,
       message: error.message || 'Something went wrong',
       error: error,
+      stack: error.stack || 'No stack trace available',
     });
   }
 };
