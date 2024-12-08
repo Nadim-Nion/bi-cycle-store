@@ -9,8 +9,8 @@ app.use(express.json());
 app.use(cors());
 
 // Application Routes
-app.use('/api/v1/products', StudentRouts);
-app.use('/api/v1/orders', OrderRoutes);
+app.use('/api/products', StudentRouts);
+app.use('/api/orders', OrderRoutes);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('This is my Bi-Cycle Store application');
