@@ -12,8 +12,8 @@ const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, cors_1.default)());
 // Application Routes
-app.use('/api/v1/products', product_route_1.StudentRouts);
-app.use('/api/v1/orders', order_route_1.OrderRoutes);
+app.use('/api/products', product_route_1.StudentRouts);
+app.use('/api/orders', order_route_1.OrderRoutes);
 app.get('/', (req, res) => {
     res.send('This is my Bi-Cycle Store application');
 });
