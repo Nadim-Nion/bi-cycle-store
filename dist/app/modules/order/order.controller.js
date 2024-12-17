@@ -17,7 +17,8 @@ const order_service_1 = require("./order.service");
 const order_validation_1 = __importDefault(require("./order.validation"));
 const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { email, product, quantity, totalPrice } = req.body.order;
+        // const { email, product, quantity, totalPrice } = req.body.order;
+        const { email, product, quantity, totalPrice } = req.body;
         const zodParsedData = order_validation_1.default.parse({
             email,
             product,

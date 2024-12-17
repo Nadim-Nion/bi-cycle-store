@@ -17,7 +17,8 @@ const product_service_1 = require("./product.service");
 const product_validation_1 = __importDefault(require("./product.validation"));
 const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { product: productData } = req.body;
+        // const { product: productData } = req.body;
+        const productData = req.body;
         const zodParsedData = product_validation_1.default.parse(productData);
         // Will call the service function
         const result = yield product_service_1.ProductServices.createProductIntoDB(zodParsedData);

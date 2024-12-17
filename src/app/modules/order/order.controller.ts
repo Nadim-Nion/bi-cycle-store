@@ -4,7 +4,8 @@ import orderValidationSchema from './order.validation';
 
 const createOrder = async (req: Request, res: Response) => {
   try {
-    const { email, product, quantity, totalPrice } = req.body.order;
+    // const { email, product, quantity, totalPrice } = req.body.order;
+    const { email, product, quantity, totalPrice } = req.body;
 
     const zodParsedData = orderValidationSchema.parse({
       email,
