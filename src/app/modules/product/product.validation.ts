@@ -3,7 +3,10 @@ import { z } from 'zod';
 const productValidationSchema = z
   .object({
     name: z.string().min(1, 'Product name is required.'),
+
     brand: z.string().min(1, 'Brand name is required.'),
+
+    model: z.string().min(1, 'Model name is required.'),
 
     price: z
       .number()

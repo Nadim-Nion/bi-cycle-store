@@ -1,8 +1,12 @@
-// import { ObjectId } from 'mongoose';
+import { Types } from 'mongoose';
+
+export type TOrderStatus = 'pending' | 'paid' | 'shipped' | 'completed' | 'cancelled';
 
 export type TOrder = {
-  email: string;
-  product: string;
+  user: Types.ObjectId;
+  // email: string;
+  product: Types.ObjectId;
   quantity: number;
   totalPrice: number;
+   status: TOrderStatus;
 };

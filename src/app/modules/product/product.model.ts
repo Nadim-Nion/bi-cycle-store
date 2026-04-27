@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { TProduct } from './product.interface';
+import PRODUCT_TYPES_ARR from './product.constant'
 
 /* This code snippet is defining a Mongoose schema for a product entity. Let's break it down: */
 const productSchema = new Schema<TProduct>(
@@ -12,6 +13,10 @@ const productSchema = new Schema<TProduct>(
       type: String,
       required: [true, 'Brand name is required.'],
     },
+    model: {
+      type: String,
+      required: [true, 'Model name is required.'],
+    },
     price: {
       type: Number,
       required: [true, 'Product price is required.'],
@@ -20,7 +25,7 @@ const productSchema = new Schema<TProduct>(
     type: {
       type: String,
       enum: {
-        values: ['Mountain', 'Road', 'Hybrid', 'BMX', 'Electric'],
+        values: PRODUCT_TYPES_ARR,
         message:
           'Product type must be one of: Mountain, Road, Hybrid, BMX, Electric.',
       },
