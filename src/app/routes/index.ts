@@ -1,13 +1,13 @@
 import express from 'express';
 import { OrderRoutes } from '../modules/order/order.route';
-import { StudentRouts } from '../modules/product/product.route';
+import { ProductRouts } from '../modules/product/product.route';
 
 const router = express.Router();
 
 const moduleRoutes = [
   {
     path: '/products',
-    route: StudentRouts,
+    route: ProductRouts,
   },
   {
     path: '/orders',
