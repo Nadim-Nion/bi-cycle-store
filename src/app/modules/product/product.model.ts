@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { TProduct } from './product.interface';
-import PRODUCT_TYPES_ARR from './product.constant'
+import { PRODUCT_TYPES_ARR } from './product.constant';
 
 /* This code snippet is defining a Mongoose schema for a product entity. Let's break it down: */
 const productSchema = new Schema<TProduct>(

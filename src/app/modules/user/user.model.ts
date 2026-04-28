@@ -1,7 +1,10 @@
 import { Schema, model } from 'mongoose';
 import { USER_ROLES_ARR, USER_ROLES_OBJ } from './user.constant';
+import { TUser, UserModelType } from './user.interface';
+import config from '../../config';
+import bcrypt from 'bcrypt';
 
-const userSchema = new Schema(
+const userSchema = new Schema<TUser, UserModelType>(
   {
     name: {
       type: String,
@@ -35,7 +38,45 @@ const userSchema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-export const User = model('User', userSchema);
+// Pre save middleware/hook: will work on create() or save()
+userSchema.pre('save', async function () { //next
+  // const user = this;
+  this.password = await bcrypt.hash(
+    this.password,
+    Number(config.bcrypt_salt_round),
+  );
+//   next();
+});
+
+// Post save middleware/hook
+userSchema.post('save', function (doc, next) {
+  doc.password = '';
+  next();
+});
+
+// Check the user is existed or not
+userSchema.statics.isUserExistsByCustomId = async function (id: string) {
+  return await User.findOne({ id }).select('+password');
+};
+
+// Check the password is matched or not
+userSchema.statics.isPasswordMatched = async function (
+  plainTextPassword: string,
+  hashedPassword: string,
+) {
+  return await bcrypt.compare(plainTextPassword, hashedPassword);
+};
+
+// Check the password was changed after the JWT was issued (token should be invalidated)
+userSchema.statics.isJWTIssuedBeforePasswordChange = function (
+  passwordChangeTimestamp: Date,
+  jwtIssuedTimestamp: number,
+) {
+  const passwordChangeTime = new Date(passwordChangeTimestamp).getTime() / 1000;
+  return passwordChangeTime > jwtIssuedTimestamp;
+};
+
+export const User = model<TUser, UserModelType>('User', userSchema);

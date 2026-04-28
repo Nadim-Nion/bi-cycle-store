@@ -1,4 +1,4 @@
-import config from '../config';
+/* import config from '../config';
 import { UserRole } from '../modules/user/user.constant';
 import { User } from '../modules/user/user.model';
 
@@ -24,3 +24,4 @@ const seedSuperAdmin = async () => {
 };
 
 export default seedSuperAdmin;
+ */

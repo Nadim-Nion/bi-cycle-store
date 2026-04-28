@@ -28,7 +28,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
     }
 
     // Check whether the user has the permission to access the resource
-    const { userId, role, iat } = decoded;
+    const { userId, role} = decoded;
 
     // check the user is exist or not
     const user = await User.isUserExistsByCustomId(userId);
@@ -47,7 +47,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
       );
     }
 
-    // Check the user is blocked or not
+    /* // Check the user is blocked or not
     const userStatus = user?.status;
 
     if (userStatus === 'blocked') {
@@ -55,15 +55,15 @@ const auth = (...requiredRoles: TUserRole[]) => {
         httpStatus.FORBIDDEN,
         'User is blocked, please contact with admin',
       );
-    }
+    } */
 
     // Check the password was changed after the JWT was issued
-    if (
+    /* if (
       user.passwordChangeAt &&
       User.isJWTIssuedBeforePasswordChange(user.passwordChangeAt, iat as number)
     ) {
       throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized');
-    }
+    } */
 
     if (requiredRoles && !requiredRoles.includes(role)) {
       throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized');
