@@ -62,8 +62,8 @@ userSchema.post('save', function (doc, next) {
 });
 
 // Check the user is existed or not
-userSchema.statics.isUserExistsByCustomId = async function (id: string) {
-  return await User.findOne({ id }).select('+password');
+userSchema.statics.isUserExistsByEmail = async function (email: string) {
+  return await User.findOne({ email }).select('+password');
 };
 
 // Check the password is matched or not
