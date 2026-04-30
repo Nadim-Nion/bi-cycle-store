@@ -1,10 +1,15 @@
 import express from 'express';
 import { OrderRoutes } from '../modules/order/order.route';
 import { ProductRouts } from '../modules/product/product.route';
+import { UserRoutes } from '../modules/user/user.route';
 
 const router = express.Router();
 
 const moduleRoutes = [
+  {
+    path: '/users',
+    route: UserRoutes,
+  },
   {
     path: '/products',
     route: ProductRouts,

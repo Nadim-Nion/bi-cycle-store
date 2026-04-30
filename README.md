@@ -45,6 +45,20 @@ This repository contains the **Bi Cycle Store**, an Inventory Management Applica
 
 ---
 
+## 🔐 Credentials
+
+### User Credentials &rarr;
+
+> **Email:** nion@gmail.com  
+> **Password:** securePass123
+
+### Admin Credential &rarr;
+
+> **Email:** admin@gmail.com  
+> **Password:** securePass123
+
+---
+
 ## 🛠️ API Endpoints
 
 ### Common Path: `/api/v1/products`

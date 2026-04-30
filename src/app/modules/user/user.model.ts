@@ -1,30 +1,33 @@
+import bcrypt from 'bcrypt';
 import { Schema, model } from 'mongoose';
+import config from '../../config';
 import { USER_ROLES_ARR, USER_ROLES_OBJ } from './user.constant';
 import { TUser, UserModelType } from './user.interface';
-import config from '../../config';
-import bcrypt from 'bcrypt';
 
 const userSchema = new Schema<TUser, UserModelType>(
   {
     name: {
       type: String,
-      required: true,
+      required: [true, 'Name is required'],
       trim: true,
     },
     email: {
       type: String,
-      required: true,
+      required: [true, 'Email is required'],
       unique: true,
       lowercase: true,
     },
     password: {
       type: String,
-      required: true,
+      required: [true, 'Password is required'],
       select: false, // hide password by default
     },
     role: {
       type: String,
-      enum: USER_ROLES_ARR,
+      enum: {
+        values: USER_ROLES_ARR,
+        message: `{VALUE} is not supported. Role must be one of the following: ${USER_ROLES_ARR.join(', ')}`,
+      },
       default: USER_ROLES_OBJ.USER,
     },
     isActive: {
@@ -42,13 +45,14 @@ const userSchema = new Schema<TUser, UserModelType>(
 );
 
 // Pre save middleware/hook: will work on create() or save()
-userSchema.pre('save', async function () { //next
+userSchema.pre('save', async function () {
+  //next
   // const user = this;
   this.password = await bcrypt.hash(
     this.password,
     Number(config.bcrypt_salt_round),
   );
-//   next();
+  //   next();
 });
 
 // Post save middleware/hook
