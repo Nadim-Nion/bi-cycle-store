@@ -3,7 +3,7 @@ import config from '../../config';
 import AppError from '../../errors/AppError';
 import { TUser, TUserLogin } from './user.interface';
 import { User } from './user.model';
-import { createToken } from './user.utils';
+import { createToken, verifyToken } from './user.utils';
 
 const createUserIntoDB = async (payload: TUser) => {
   const result = await User.create(payload);
@@ -60,18 +60,77 @@ const loginUserFromDB = async (payload: TUserLogin) => {
   };
 
   // Generate the access token
-  const accessToken = createToken(jwtPayload, config.jwt_access_secret as string, config.access_expires_in!);
+  const accessToken = createToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    config.access_expires_in!,
+  );
 
   // Generate the refresh token
-   const refreshToken = createToken(jwtPayload, config.jwt_refresh_secret as string, config.refresh_expires_in!);
+  const refreshToken = createToken(
+    jwtPayload,
+    config.jwt_refresh_secret as string,
+    config.refresh_expires_in!,
+  );
 
   return {
     accessToken,
-    refreshToken
+    refreshToken,
   };
+};
+
+const refreshTokenFromDB = async (token: string) => {
+  if (!token) {
+    throw new AppError(
+      status.UNAUTHORIZED,
+      'You are not authorized to access this resource',
+    );
+  }
+
+  // Check the token is valid or not
+  const decoded = verifyToken(token, config.jwt_refresh_secret as string);
+
+  // Check the user is exists ot not
+  const { email } = decoded;
+  const user = await User.isUserExistsByEmail(email);
+
+  if (!user) {
+    throw new AppError(status.UNAUTHORIZED, 'Invalid Credentials');
+  }
+
+  // Check the user is blocked or not
+  if (user && user.isDeleted) {
+    throw new AppError(
+      status.FORBIDDEN,
+      'User is deleted. Please contact support.',
+    );
+  }
+
+  // Check the user is active or not
+  if (user && !user.isActive) {
+    throw new AppError(
+      status.FORBIDDEN,
+      'User is not active. Please contact support.',
+    );
+  }
+
+  // Generates Access Token after hitting /refresh-token endpoint
+  const jwtPayload = {
+    email: user?.email,
+    role: user?.role ?? 'user',
+  };
+
+  const accessToken = createToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    config.access_expires_in as string,
+  );
+
+  return { accessToken };
 };
 
 export const UserServices = {
   createUserIntoDB,
   loginUserFromDB,
+  refreshTokenFromDB,
 };
