@@ -1,32 +1,19 @@
 import { Request, Response } from 'express';
+import status from 'http-status';
+import catchAsync from '../../utils/catchAsync';
+import sendResponse from '../../utils/sendResponse';
 import { ProductServices } from './product.service';
 
-const createProduct = async (req: Request, res: Response) => {
-  try {
-    // const { product: productData } = req.body;
-    // const productData = req.body;
-    // const zodParsedData = productValidationSchema.parse(productData);
-      // const userId = req.user.userId;
+const createProduct = catchAsync(async (req, res) => {
+  const result = await ProductServices.createProductIntoDB(req.body);
 
-    // Will call the service function
-    const result = await ProductServices.createProductIntoDB(req.body);
-
-    // send the response to the client
-    res.status(200).json({
-      success: true,
-      message: 'Bicycle created successfully',
-      data: result,
-    });
-  } catch (err) {
-    const error = err as Error;
-    res.status(500).json({
-      success: false,
-      message: error.message || 'Something went wrong',
-      data: error,
-      stack: error.stack || 'No stack trace available',
-    });
-  }
-};
+  sendResponse(res, {
+    statusCode: status.CREATED,
+    success: true,
+    message: 'Bicycle created successfully',
+    data: result,
+  });
+});
 
 const getAllProducts = async (req: Request, res: Response) => {
   try {

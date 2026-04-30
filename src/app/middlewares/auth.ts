@@ -3,10 +3,9 @@ import httpStatus from 'http-status';
 import jwt, { type JwtPayload } from 'jsonwebtoken';
 import config from '../config';
 import AppError from '../errors/AppError';
-import catchAsync from '../utils/catchAsync';
 import type { TUserRole } from '../modules/user/user.interface';
 import { User } from '../modules/user/user.model';
-
+import catchAsync from '../utils/catchAsync';
 
 const auth = (...requiredRoles: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -28,10 +27,10 @@ const auth = (...requiredRoles: TUserRole[]) => {
     }
 
     // Check whether the user has the permission to access the resource
-    const { userId, role} = decoded;
+    const { email, role } = decoded;
 
     // check the user is exist or not
-    const user = await User.isUserExistsByCustomId(userId);
+    const user = await User.isUserExistsByEmail(email);
 
     if (!user) {
       throw new AppError(httpStatus.NOT_FOUND, 'User not found');
@@ -44,6 +43,16 @@ const auth = (...requiredRoles: TUserRole[]) => {
       throw new AppError(
         httpStatus.FORBIDDEN,
         'User is deleted, please contact with admin',
+      );
+    }
+
+    // Check the user is active or not
+    const isUserActive = user?.isActive;
+
+    if (!isUserActive) {
+      throw new AppError(
+        httpStatus.FORBIDDEN,
+        'User is inactive, please contact with admin',
       );
     }
 
