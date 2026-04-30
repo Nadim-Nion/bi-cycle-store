@@ -8,7 +8,7 @@ import { ProductValidations } from './product.validation';
 const router = express.Router();
 
 router.post(
-  '/',
+  '/create-product',
   auth(USER_ROLES_OBJ.ADMIN),
   validateRequest(ProductValidations.createProductValidationSchema),
   ProductControllers.createProduct,

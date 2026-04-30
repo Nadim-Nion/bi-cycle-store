@@ -6,6 +6,6 @@ export type TProduct = {
   type: 'Mountain' | 'Road' | 'Hybrid' | 'BMX' | 'Electric';
   description: string;
   quantity: number;
-  inStock: boolean;
-  isDeleted: boolean;
+  inStock?: boolean;
+  isDeleted?: boolean;
 };
