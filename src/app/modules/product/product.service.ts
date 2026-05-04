@@ -29,28 +29,38 @@ const getSingleProductFromDB = async (productId: string) => {
   // Check if the product exists and is not deleted
   const result = await Product.findOne({
     _id: productId,
-    isDeleted: { $ne: true },
   });
 
   return result;
 };
 
+// const updateSingleProductIntoDB = async (
+//   productId: string,
+//   updatedData: Partial<TProduct>,
+// ) => {
+//   try {
+//     const result = await Product.findByIdAndUpdate(productId, updatedData, {
+//       new: true,
+//     });
+//     if (!result) {
+//       throw new Error('Product not found');
+//     }
+//     return result;
+//   } catch (err) {
+//     const error = err as Error;
+//     throw new Error(error.message);
+//   }
+// };
+
 const updateSingleProductIntoDB = async (
   productId: string,
   updatedData: Partial<TProduct>,
 ) => {
-  try {
-    const result = await Product.findByIdAndUpdate(productId, updatedData, {
-      new: true,
-    });
-    if (!result) {
-      throw new Error('Product not found');
-    }
-    return result;
-  } catch (err) {
-    const error = err as Error;
-    throw new Error(error.message);
-  }
+  const result = await Product.findByIdAndUpdate(productId, updatedData, {
+    new: true,
+    runValidators: true,
+  });
+  return result;
 };
 
 const deleteProductFromDB = async (productId: string) => {

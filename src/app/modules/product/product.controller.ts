@@ -1,4 +1,3 @@
-import { Request, Response } from 'express';
 import status from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
@@ -39,7 +38,25 @@ const getSingleProduct = catchAsync(async (req, res) => {
   });
 });
 
-const updateProduct = async (req: Request, res: Response) => {
+const updateProduct = catchAsync(async (req, res) => {
+  const { productId } = req.params;
+  const updatedData = req.body;
+
+  const result = await ProductServices.updateSingleProductIntoDB(
+    productId,
+    updatedData,
+  );
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: 'Bicycle updated successfully',
+    data: result,
+  });
+});
+
+/* 
+async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
     const updatedData = req.body;
@@ -63,27 +80,20 @@ const updateProduct = async (req: Request, res: Response) => {
     });
   }
 };
+*/
 
-const deleteProduct = async (req: Request, res: Response) => {
-  try {
-    const { productId } = req.params;
-    const result = await ProductServices.deleteProductFromDB(productId);
+const deleteProduct = catchAsync(async (req, res) => {
+  const { productId } = req.params;
 
-    res.status(200).json({
-      success: true,
-      message: 'Bicycle deleted successfully',
-      data: result,
-    });
-  } catch (err) {
-    const error = err as Error;
-    res.status(500).json({
-      success: false,
-      message: error.message || 'Something went wrong',
-      error: error,
-      stack: error.stack || 'No stack trace available',
-    });
-  }
-};
+  const result = await ProductServices.deleteProductFromDB(productId);
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: 'Bicycle deleted successfully',
+    data: result,
+  });
+});
 
 export const ProductControllers = {
   createProduct,

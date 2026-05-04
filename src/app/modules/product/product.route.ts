@@ -21,7 +21,7 @@ router.get(
   ProductControllers.getSingleProduct,
 );
 
-router.put(
+router.patch(
   '/:productId',
   auth(USER_ROLES_OBJ.ADMIN),
   ProductControllers.updateProduct,
