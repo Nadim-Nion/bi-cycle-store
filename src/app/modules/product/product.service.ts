@@ -26,7 +26,12 @@ const getAllProductsFromDB = async (query: Record<string, unknown>) => {
 };
 
 const getSingleProductFromDB = async (productId: string) => {
-  const result = await Product.findOne({ _id: productId });
+  // Check if the product exists and is not deleted
+  const result = await Product.findOne({
+    _id: productId,
+    isDeleted: { $ne: true },
+  });
+
   return result;
 };
 
