@@ -1,0 +1,96 @@
+// import { TProduct } from './product.interface';
+// import { Product } from './product.model';
+
+// const createProductIntoDB = async (productData: TProduct) => {
+//  const result = await Product.create(productData);
+//     return result;
+// };
+
+// const getAllProductsFromDB = async (searchTerm: string | undefined) => {
+//   let filter = {};
+//   if (searchTerm) {
+//     filter = {
+//       $or: [
+//         { name: { $regex: searchTerm, $options: 'i' } },
+//         { brand: { $regex: searchTerm, $options: 'i' } },
+//         { type: { $regex: searchTerm, $options: 'i' } },
+//       ],
+//     };
+//   }
+//   const result = await Product.find(filter);
+//   return result;
+// };
+
+// const getSingleProductFromDB = async (productId: string) => {
+//   const result = await Product.findOne({ _id: productId });
+//   return result;
+// };
+
+
+// const getAllProductsFromDB = async (query: Record<string, unknown>) => {
+//   /*
+//   [
+//   {title: {$regex: query?.search, $options: "i"}}
+//   {content: {$regex: query?.search, $options: "i"}}
+//   ]
+//   */
+
+//   // Searching (Partial match)
+//   const searchCondition = query?.search
+//     ? {
+//         $or: productSearchableFields.map((field) => ({
+//           [field]: { $regex: query?.search, $options: 'i' },
+//         })),
+//       }
+//     : {};
+
+//   // Filtering (Exact match)
+//   const filterCondition = query?.filter
+//     ? {
+//         brand: query?.filter,
+//       }
+//     : {};
+
+//   // Merging search and filter conditions
+//   const finalQuery = {
+//     ...searchCondition,
+//     ...filterCondition,
+//   };
+
+//   const result = await Product.find(finalQuery);
+//   return result;
+// };
+
+// const updateSingleProductIntoDB = async (
+//   productId: string,
+//   updatedData: Partial<TProduct>,
+// ) => {
+//   try {
+//     const result = await Product.findByIdAndUpdate(productId, updatedData, {
+//       new: true,
+//     });
+//     if (!result) {
+//       throw new Error('Product not found');
+//     }
+//     return result;
+//   } catch (err) {
+//     const error = err as Error;
+//     throw new Error(error.message);
+//   }
+// };
+
+// const deleteProductFromDB = async (productId: string) => {
+//   const result = await Product.updateOne(
+//     { _id: productId },
+//     { isDeleted: true },
+//   );
+//   return result;
+// };
+
+// export const ProductServices = {
+//   createProductIntoDB,
+//   getAllProductsFromDB,
+//   getSingleProductFromDB,
+//   updateSingleProductIntoDB,
+//   deleteProductFromDB,
+// };

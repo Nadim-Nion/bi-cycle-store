@@ -15,28 +15,16 @@ const createProduct = catchAsync(async (req, res) => {
   });
 });
 
-const getAllProducts = async (req: Request, res: Response) => {
-  try {
-    const { searchTerm } = req.query;
-    const result = await ProductServices.getAllProductsFromDB(
-      searchTerm as string,
-    );
+const getAllProducts = catchAsync(async (req, res) => {
+  const result = await ProductServices.getAllProductsFromDB(req.query);
 
-    res.status(200).json({
-      success: true,
-      message: 'Bicycles retrieved successfully',
-      data: result,
-    });
-  } catch (err) {
-    const error = err as Error;
-    res.status(500).json({
-      success: false,
-      message: error.message || 'Something went wrong',
-      data: error,
-      stack: error.stack || 'No stack trace available',
-    });
-  }
-};
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: 'All Bicycles retrieved successfully',
+    data: result,
+  });
+});
 
 const getSingleProduct = async (req: Request, res: Response) => {
   try {

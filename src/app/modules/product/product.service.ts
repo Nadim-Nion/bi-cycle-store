@@ -1,24 +1,28 @@
+import QueryBuilder from '../../builder/QueryBuilder';
+import { productSearchableFields } from './product.constant';
 import { TProduct } from './product.interface';
 import { Product } from './product.model';
 
 const createProductIntoDB = async (productData: TProduct) => {
- const result = await Product.create(productData);
-    return result;
+  const result = await Product.create(productData);
+  return result;
 };
 
-const getAllProductsFromDB = async (searchTerm: string | undefined) => {
-  let filter = {};
-  if (searchTerm) {
-    filter = {
-      $or: [
-        { name: { $regex: searchTerm, $options: 'i' } },
-        { brand: { $regex: searchTerm, $options: 'i' } },
-        { type: { $regex: searchTerm, $options: 'i' } },
-      ],
-    };
-  }
-  const result = await Product.find(filter);
-  return result;
+const getAllProductsFromDB = async (query: Record<string, unknown>) => {
+  const productQuery = new QueryBuilder(Product.find(), query)
+    .search(productSearchableFields)
+    .filter()
+    .sort()
+    .paginate()
+    .fieldLimiting();
+
+  const result = await productQuery.modelQuery;
+  const meta = await productQuery.countTotal();
+
+  return {
+    meta,
+    result,
+  };
 };
 
 const getSingleProductFromDB = async (productId: string) => {
