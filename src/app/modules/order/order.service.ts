@@ -1,7 +1,9 @@
 import status from 'http-status';
+import QueryBuilder from '../../builder/QueryBuilder';
 import AppError from '../../errors/AppError';
 import { Product } from '../product/product.model';
 import { User } from '../user/user.model';
+import { orderSearchableFields } from './order.constant';
 import { TOrder } from './order.interface';
 import { Order } from './order.model';
 
@@ -50,6 +52,26 @@ const createOrderIntoDB = async (user: string, payload: TOrder) => {
   return result;
 };
 
+const getAllOrdersFromDB = async (query: Record<string, unknown>) => {
+  const orderQuery = new QueryBuilder(
+    Order.find().populate('user').populate('product'),
+    query,
+  )
+    .search(orderSearchableFields)
+    .filter()
+    .sort()
+    .paginate()
+    .fieldLimiting();
+
+  const result = await orderQuery.modelQuery;
+  const meta = await orderQuery.countTotal();
+
+  return {
+    meta,
+    result,
+  };
+};
+
 const calculateTotalRevenue = async () => {
   const result = await Order.aggregate([
     // Stage 1: Calculate total price for each order
@@ -72,5 +94,6 @@ const calculateTotalRevenue = async () => {
 
 export const OrderServices = {
   createOrderIntoDB,
+  getAllOrdersFromDB,
   calculateTotalRevenue,
 };

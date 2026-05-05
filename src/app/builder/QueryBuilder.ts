@@ -10,6 +10,7 @@ class QueryBuilder<T> {
     this.query = query;
   }
 
+  // Partial matching
   search(searchableFields: string[]) {
     const searchTerm = this?.query?.searchTerm;
 
@@ -27,6 +28,7 @@ class QueryBuilder<T> {
     return this;
   }
 
+  // Exact matching
   filter() {
     const queryObject = { ...this.query }; // copy the query object from base query
 

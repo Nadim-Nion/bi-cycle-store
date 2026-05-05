@@ -5,3 +5,5 @@ export const ORDER_STATUS_ARR = [
   'completed',
   'cancelled',
 ] as const;
+
+export const orderSearchableFields = ['quantity', 'totalPrice', 'status'];
