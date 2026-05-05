@@ -1,23 +1,30 @@
+import status from 'http-status';
+import AppError from '../../errors/AppError';
 import { Product } from '../product/product.model';
+import { User } from '../user/user.model';
 import { TOrder } from './order.interface';
 import { Order } from './order.model';
 
-const createOrderIntoDB = async ({
-  email,
-  product,
-  quantity,
-  totalPrice,
-}: TOrder) => {
+const createOrderIntoDB = async (user: string, payload: TOrder) => {
+  const { product, quantity, totalPrice } = payload;
+
+  // Find the user details using the email
+  const userData = await User.findOne({ email: user });
+
+  if (!userData) {
+    throw new AppError(status.NOT_FOUND, 'User not found');
+  }
+
   // Find the product
   const productData = await Product.findById(product);
 
   if (!productData) {
-    throw new Error('Product not found');
+    throw new AppError(status.NOT_FOUND, 'Product not found');
   }
 
   //Check sufficient product stock is available
   if (productData.quantity < quantity) {
-    throw new Error('Insufficient stock');
+    throw new AppError(status.BAD_REQUEST, 'Insufficient stock');
   }
 
   // Reduce the product quantity
@@ -28,10 +35,18 @@ const createOrderIntoDB = async ({
     productData.inStock = false;
   }
 
+  // Save the updated product data
   await productData.save();
 
+  const orderPayload = {
+    user: userData?._id,
+    product,
+    quantity,
+    totalPrice,
+  };
+
   // Create a new order
-  const result = await Order.create({ email, product, quantity, totalPrice });
+  const result = await Order.create(orderPayload);
   return result;
 };
 
