@@ -24,6 +24,11 @@ const createOrderIntoDB = async (user: string, payload: TOrder) => {
     throw new AppError(status.NOT_FOUND, 'Product not found');
   }
 
+  // Check if the product is in stock
+  if (!productData.inStock) {
+    throw new AppError(status.BAD_REQUEST, 'Product is out of stock');
+  }
+
   //Check sufficient product stock is available
   if (productData.quantity < quantity) {
     throw new AppError(status.BAD_REQUEST, 'Insufficient stock');
