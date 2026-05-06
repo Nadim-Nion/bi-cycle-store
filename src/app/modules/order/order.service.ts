@@ -77,6 +77,14 @@ const getAllOrdersFromDB = async (query: Record<string, unknown>) => {
   };
 };
 
+const getSingleOrderFromDB = async (orderId: string) => {
+  const result = await Order.findById(orderId)
+    .populate('user')
+    .populate('product');
+
+  return result;
+};
+
 const calculateTotalRevenue = async () => {
   const result = await Order.aggregate([
     // Stage 1: Calculate total price for each order
@@ -100,5 +108,6 @@ const calculateTotalRevenue = async () => {
 export const OrderServices = {
   createOrderIntoDB,
   getAllOrdersFromDB,
+  getSingleOrderFromDB,
   calculateTotalRevenue,
 };

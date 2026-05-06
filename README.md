@@ -50,6 +50,9 @@ This repository contains the **Bi Cycle Store**, an Inventory Management Applica
 ### User Credentials &rarr;
 
 > **Email:** nion@gmail.com  
+> **Password:** securePass123 
+
+> **Email:** johndoe@gmail.com <br />
 > **Password:** securePass123
 
 ### Admin Credential &rarr;
