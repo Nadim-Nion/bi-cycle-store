@@ -15,7 +15,17 @@ router.post(
 
 router.get('/', auth(USER_ROLES_OBJ.ADMIN), OrderControllers.getAllOrders);
 
-router.get('/:orderId', auth(USER_ROLES_OBJ.USER), OrderControllers.getSingleOrder);
+router.get(
+  '/:orderId',
+  auth(USER_ROLES_OBJ.USER),
+  OrderControllers.getSingleOrder,
+);
+
+router.patch(
+  '/:orderId/status',
+  auth(USER_ROLES_OBJ.ADMIN),
+  OrderControllers.updateOrderStatus,
+);
 
 router.get('/revenue', OrderControllers.calculateRevenue);
 

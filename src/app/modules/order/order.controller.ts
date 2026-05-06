@@ -41,6 +41,19 @@ const getSingleOrder = catchAsync(async (req, res) => {
   });
 });
 
+const updateOrderStatus = catchAsync(async (req, res) => {
+  const { orderId } = req.params;
+
+  const result = await OrderServices.updateOrderStatusIntoDB(orderId, req.body.status);
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: 'Order status updated successfully',
+    data: result,
+  });
+});
+
 const calculateRevenue = async (req: Request, res: Response) => {
   try {
     const result = await OrderServices.calculateTotalRevenue();
@@ -66,5 +79,6 @@ export const OrderControllers = {
   createOrder,
   getAllOrders,
   getSingleOrder,
+  updateOrderStatus,
   calculateRevenue,
 };

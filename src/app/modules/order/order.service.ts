@@ -4,11 +4,11 @@ import AppError from '../../errors/AppError';
 import { Product } from '../product/product.model';
 import { User } from '../user/user.model';
 import { orderSearchableFields } from './order.constant';
-import { TOrder } from './order.interface';
+import { TOrder, TOrderStatus } from './order.interface';
 import { Order } from './order.model';
 
 const createOrderIntoDB = async (user: string, payload: TOrder) => {
-  const { product, quantity} = payload;
+  const { product, quantity } = payload;
 
   // Find the user details using the email
   const userData = await User.findOne({ email: user });
@@ -96,6 +96,19 @@ const getSingleOrderFromDB = async (orderId: string, userEmail: string) => {
   return result;
 };
 
+const updateOrderStatusIntoDB = async (
+  orderId: string,
+  status: TOrderStatus,
+) => {
+  const result = await Order.findByIdAndUpdate(
+    orderId,
+    { status },
+    { new: true, runValidators: true },
+  );
+
+  return result;
+};
+
 const calculateTotalRevenue = async () => {
   const result = await Order.aggregate([
     // Stage 1: Calculate total price for each order
@@ -120,5 +133,6 @@ export const OrderServices = {
   createOrderIntoDB,
   getAllOrdersFromDB,
   getSingleOrderFromDB,
+  updateOrderStatusIntoDB,
   calculateTotalRevenue,
 };

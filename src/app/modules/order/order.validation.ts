@@ -25,6 +25,19 @@ const createOrderValidationSchema = z.object({
   }),
 });
 
+const updateOrderStatusValidationSchema = z.object({
+  params: z.object({
+    orderId: z.string().min(1, 'Order ID is required'),
+  }),
+  body: z.object({
+    status: z.enum(ORDER_STATUS_ARR, {
+      message:
+        'Status must be one of: pending, paid, shipped, completed, cancelled',
+    }),
+  }),
+});
+
 export const OrderValidations = {
   createOrderValidationSchema,
+  updateOrderStatusValidationSchema,
 };
