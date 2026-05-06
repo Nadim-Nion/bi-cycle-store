@@ -1,4 +1,3 @@
-import { Request, Response } from 'express';
 import status from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
@@ -44,7 +43,10 @@ const getSingleOrder = catchAsync(async (req, res) => {
 const updateOrderStatus = catchAsync(async (req, res) => {
   const { orderId } = req.params;
 
-  const result = await OrderServices.updateOrderStatusIntoDB(orderId, req.body.status);
+  const result = await OrderServices.updateOrderStatusIntoDB(
+    orderId,
+    req.body.status,
+  );
 
   sendResponse(res, {
     statusCode: status.OK,
@@ -54,26 +56,37 @@ const updateOrderStatus = catchAsync(async (req, res) => {
   });
 });
 
-const calculateRevenue = async (req: Request, res: Response) => {
-  try {
-    const result = await OrderServices.calculateTotalRevenue();
+// const calculateRevenue = async (req: Request, res: Response) => {
+//   try {
+//     const result = await OrderServices.calculateTotalRevenue();
 
-    // send the response to the client
-    res.status(200).json({
-      success: true,
-      message: 'Revenue calculated successfully',
-      data: result,
-    });
-  } catch (err) {
-    const error = err as Error;
-    res.status(500).json({
-      success: false,
-      message: error.message || 'Something went wrong',
-      error: error,
-      stack: error.stack || 'No stack trace available',
-    });
-  }
-};
+//     // send the response to the client
+//     res.status(200).json({
+//       success: true,
+//       message: 'Revenue calculated successfully',
+//       data: result,
+//     });
+//   } catch (err) {
+//     const error = err as Error;
+//     res.status(500).json({
+//       success: false,
+//       message: error.message || 'Something went wrong',
+//       error: error,
+//       stack: error.stack || 'No stack trace available',
+//     });
+//   }
+// };
+
+const calculateRevenue = catchAsync(async (req, res) => {
+  const result = await OrderServices.calculateTotalRevenue();
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: 'Revenue calculated successfully',
+    data: result,
+  });
+});
 
 export const OrderControllers = {
   createOrder,
