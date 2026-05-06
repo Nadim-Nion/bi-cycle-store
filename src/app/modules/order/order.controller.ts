@@ -29,8 +29,9 @@ const getAllOrders = catchAsync(async (req, res) => {
 });
 
 const getSingleOrder = catchAsync(async (req, res) => {
-  const { id } = req.params;
-  const result = await OrderServices.getSingleOrderFromDB(id);
+  const { orderId } = req.params;
+  const userEmail = req?.user?.email;
+  const result = await OrderServices.getSingleOrderFromDB(orderId, userEmail);
 
   sendResponse(res, {
     statusCode: status.OK,

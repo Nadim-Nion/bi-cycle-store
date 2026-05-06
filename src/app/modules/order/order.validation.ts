@@ -13,7 +13,8 @@ const createOrderValidationSchema = z.object({
 
     totalPrice: z
       .number()
-      .min(0, { message: 'Total price must be a positive number' }),
+      .min(0, { message: 'Total price must be a positive number' })
+      .optional(),
 
     status: z
       .enum(ORDER_STATUS_ARR, {

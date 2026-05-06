@@ -8,7 +8,7 @@ import { TOrder } from './order.interface';
 import { Order } from './order.model';
 
 const createOrderIntoDB = async (user: string, payload: TOrder) => {
-  const { product, quantity, totalPrice } = payload;
+  const { product, quantity} = payload;
 
   // Find the user details using the email
   const userData = await User.findOne({ email: user });
@@ -45,6 +45,9 @@ const createOrderIntoDB = async (user: string, payload: TOrder) => {
   // Save the updated product data
   await productData.save();
 
+  // Dynamically update the totalPrice of an order
+  const totalPrice = productData.price * quantity;
+
   const orderPayload = {
     user: userData?._id,
     product,
@@ -77,10 +80,18 @@ const getAllOrdersFromDB = async (query: Record<string, unknown>) => {
   };
 };
 
-const getSingleOrderFromDB = async (orderId: string) => {
+const getSingleOrderFromDB = async (orderId: string, userEmail: string) => {
   const result = await Order.findById(orderId)
     .populate('user')
     .populate('product');
+
+  // Find the user details using the email
+  const userData = await User.findOne({ email: userEmail });
+
+  // Check if the order belongs to the user
+  if (result && result?.user?._id.toString() !== userData?._id.toString()) {
+    throw new AppError(status.FORBIDDEN, 'You are not the owner of this order');
+  }
 
   return result;
 };

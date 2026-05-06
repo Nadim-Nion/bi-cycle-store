@@ -15,7 +15,7 @@ router.post(
 
 router.get('/', auth(USER_ROLES_OBJ.ADMIN), OrderControllers.getAllOrders);
 
-router.get('/:id', auth(USER_ROLES_OBJ.USER), OrderControllers.getSingleOrder);
+router.get('/:orderId', auth(USER_ROLES_OBJ.USER), OrderControllers.getSingleOrder);
 
 router.get('/revenue', OrderControllers.calculateRevenue);
 
