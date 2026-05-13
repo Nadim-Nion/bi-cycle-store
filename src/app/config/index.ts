@@ -12,4 +12,6 @@ export default {
   access_expires_in: process.env.ACCESS_EXPIRES_IN,
   refresh_expires_in: process.env.REFRESH_EXPIRES_IN,
   jwt_refresh_secret: process.env.JWT_REFRESH_SECRET,
+  ssl_commerz_store_id: process.env.SSL_COMMERZ_STORE_ID,
+  ssl_commerz_store_password: process.env.SSL_COMMERZ_STORE_PASSWORD,
 };

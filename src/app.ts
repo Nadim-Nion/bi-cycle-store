@@ -5,6 +5,13 @@ import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import notFound from './app/middlewares/notFound';
 import router from './app/routes';
 const app: Application = express();
+import SSLCommerzPayment from 'sslcommerz-lts';
+import config from './app/config';
+
+
+const store_id = config.ssl_commerz_store_id!;
+const store_passwd = config.ssl_commerz_store_password!;
+const is_live = false //true for live, false for sandbox
 
 // Parser
 app.use(express.json());
