@@ -1,6 +1,7 @@
 import status from 'http-status';
 import QueryBuilder from '../../builder/QueryBuilder';
 import AppError from '../../errors/AppError';
+import { PaymentServices } from '../payment/payment.service';
 import { Product } from '../product/product.model';
 import { User } from '../user/user.model';
 import { orderSearchableFields } from './order.constant';
@@ -34,13 +35,13 @@ const createOrderIntoDB = async (user: string, payload: TOrder) => {
     throw new AppError(status.BAD_REQUEST, 'Insufficient stock');
   }
 
-  // Reduce the product quantity
-  productData.quantity = productData.quantity - quantity;
+  // // Reduce the product quantity
+  // productData.quantity = productData.quantity - quantity;
 
-  // Update inStock flag if quantity becomes zero
-  if (productData.quantity === 0) {
-    productData.inStock = false;
-  }
+  // // Update inStock flag if quantity becomes zero
+  // if (productData.quantity === 0) {
+  //   productData.inStock = false;
+  // }
 
   // Save the updated product data
   await productData.save();
@@ -57,6 +58,23 @@ const createOrderIntoDB = async (user: string, payload: TOrder) => {
 
   // Create a new order
   const result = await Order.create(orderPayload);
+
+  // Generate Transaction ID
+  const transactionId = `TXN-${Date.now()}`;
+
+  // Create Payment
+  await PaymentServices.createPayment({
+    order: result._id,
+    transactionId,
+    amount: totalPrice,
+    status: 'pending',
+  });
+
+   // 6. Initialize SSL
+  // const paymentSession =
+  //   await PaymentServices.initiatePayment({
+  //   });
+
   return result;
 };
 
