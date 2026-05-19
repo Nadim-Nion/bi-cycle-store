@@ -1,7 +1,6 @@
 import status from 'http-status';
 import QueryBuilder from '../../builder/QueryBuilder';
 import AppError from '../../errors/AppError';
-import { PaymentServices } from '../payment/payment.service';
 import { Product } from '../product/product.model';
 import { User } from '../user/user.model';
 import { orderSearchableFields } from './order.constant';
@@ -59,23 +58,27 @@ const createOrderIntoDB = async (user: string, payload: TOrder) => {
   // Create a new order
   const result = await Order.create(orderPayload);
 
-  // Generate Transaction ID
-  const transactionId = `TXN-${Date.now()}`;
+  // // Generate Transaction ID
+  // const transactionId = `TXN-${Date.now()}`;
 
-  // Create Payment
-  await PaymentServices.createPayment({
-    order: result._id,
-    transactionId,
-    amount: totalPrice,
-    status: 'pending',
-  });
+  // // Create Payment
+  // await PaymentServices.createPayment({
+  //   order: result._id,
+  //   transactionId,
+  //   amount: totalPrice,
+  //   status: 'pending',
+  // });
 
-   // 6. Initialize SSL
-  // const paymentSession =
-  //   await PaymentServices.initiatePayment({
-  //   });
+  // // Initialize SSL
+  // const paymentSession = await PaymentServices.initiatePayment(
+  //   result._id.toString(),
+  // );
 
   return result;
+  // return {
+  //   order: result,
+  //   payment: paymentSession,
+  // };
 };
 
 const getAllOrdersFromDB = async (query: Record<string, unknown>) => {
