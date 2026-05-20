@@ -28,7 +28,7 @@ const initiatePayment = async (orderId: string) => {
     currency: 'BDT',
     tran_id: transactionId, // use unique tran_id for each api call
     success_url: `http://localhost:5000/api/v1/payments/success/${transactionId}`,
-    fail_url: `http://localhost:5000/api/v1/payments/fail`,
+    fail_url: `http://localhost:5000/api/v1/payments/fail/${transactionId}`,
     cancel_url: `http://localhost:5000/api/v1/payments/cancel`,
     ipn_url: `http://localhost:5000/api/v1/payments/ipn`,
     shipping_method: 'Courier',
@@ -154,6 +154,9 @@ const handlePaymentFail = async (transactionId: string) => {
 
   // Remove the order when payment fails
   await Order.findOneAndDelete({ _id: payment.order });
+
+  // Remove the payment document also
+  await Payment.findOneAndDelete({ transactionId });
 };
 
 export const PaymentServices = {
