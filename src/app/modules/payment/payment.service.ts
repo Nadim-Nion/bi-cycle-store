@@ -3,6 +3,7 @@ import SSLCommerzPayment from 'sslcommerz-lts';
 import config from '../../config';
 import AppError from '../../errors/AppError';
 import { Order } from '../order/order.model';
+import { Product } from '../product/product.model';
 import { User } from '../user/user.model';
 import { Payment } from './payment.model';
 
@@ -90,7 +91,7 @@ const handlePaymentSuccess = async (transactionId: string) => {
   }
 
   // Update payment status to "paid"
-  const updatedPayment = await Payment.findByIdAndUpdate(
+  await Payment.findByIdAndUpdate(
     payment._id,
     {
       status: 'paid',
@@ -102,7 +103,7 @@ const handlePaymentSuccess = async (transactionId: string) => {
   );
 
   // Update order status to "paid"
-  const updatedOrder = await Order.findOneAndUpdate(
+  await Order.findOneAndUpdate(
     payment.order,
     {
       status: 'paid',
@@ -113,13 +114,50 @@ const handlePaymentSuccess = async (transactionId: string) => {
     },
   );
 
-  return {
-    payment: updatedPayment,
-    order: updatedOrder,
-  };
+  // Reduce the product quantity and update inStock flag if necessary
+  const order = await Order.findById(payment.order);
+  if (!order) {
+    throw new AppError(status.NOT_FOUND, 'Order not found');
+  }
+
+  const product = await Product.findById(order.product);
+  if (!product) {
+    throw new AppError(status.NOT_FOUND, 'Product not found');
+  }
+
+  product.quantity = product.quantity - order.quantity;
+
+  // Update inStock flag if quantity becomes zero or less
+  if (product.quantity <= 0) {
+    product.inStock = false;
+  }
+
+  await product.save();
+};
+
+const handlePaymentFail = async (transactionId: string) => {
+  // Find the payment by transaction ID
+  const payment = await Payment.findOne({ transactionId });
+  if (!payment) {
+    throw new AppError(status.NOT_FOUND, 'Payment not found');
+  }
+
+  // Update payment status to "failed"
+  await Payment.findByIdAndUpdate(
+    payment._id,
+    { status: 'failed' },
+    {
+      new: true,
+      runValidators: true,
+    },
+  );
+
+  // Remove the order when payment fails
+  await Order.findOneAndDelete({ _id: payment.order });
 };
 
 export const PaymentServices = {
   initiatePayment,
   handlePaymentSuccess,
+  handlePaymentFail,
 };

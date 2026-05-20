@@ -6,13 +6,13 @@ const createPaymentValidationSchema = z.object({
   }),
 });
 
-const paymentSuccessvalidationSchema = z.object({
+const paymentValidationSchema = z.object({
   params: z.object({
     transactionId: z.string(),
   }),
 });
 
-export const Paymentvalidations = {
+export const PaymentValidations = {
   createPaymentValidationSchema,
-  paymentSuccessvalidationSchema,
+  paymentValidationSchema,
 };

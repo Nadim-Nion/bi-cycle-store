@@ -34,14 +34,6 @@ const createOrderIntoDB = async (user: string, payload: TOrder) => {
     throw new AppError(status.BAD_REQUEST, 'Insufficient stock');
   }
 
-  // // Reduce the product quantity
-  // productData.quantity = productData.quantity - quantity;
-
-  // // Update inStock flag if quantity becomes zero
-  // if (productData.quantity === 0) {
-  //   productData.inStock = false;
-  // }
-
   // Save the updated product data
   await productData.save();
 
@@ -58,27 +50,7 @@ const createOrderIntoDB = async (user: string, payload: TOrder) => {
   // Create a new order
   const result = await Order.create(orderPayload);
 
-  // // Generate Transaction ID
-  // const transactionId = `TXN-${Date.now()}`;
-
-  // // Create Payment
-  // await PaymentServices.createPayment({
-  //   order: result._id,
-  //   transactionId,
-  //   amount: totalPrice,
-  //   status: 'pending',
-  // });
-
-  // // Initialize SSL
-  // const paymentSession = await PaymentServices.initiatePayment(
-  //   result._id.toString(),
-  // );
-
   return result;
-  // return {
-  //   order: result,
-  //   payment: paymentSession,
-  // };
 };
 
 const getAllOrdersFromDB = async (query: Record<string, unknown>) => {

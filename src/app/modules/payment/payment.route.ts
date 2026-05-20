@@ -3,22 +3,27 @@ import auth from '../../middlewares/auth';
 import validateRequest from '../../middlewares/validateRequest';
 import { USER_ROLES_OBJ } from '../user/user.constant';
 import { PaymentControllers } from './payment.controller';
-import { Paymentvalidations } from './payment.validation';
+import { PaymentValidations } from './payment.validation';
 
 const router = express.Router();
 
 router.post(
   '/initiate/:orderId',
   auth(USER_ROLES_OBJ.USER),
-  validateRequest(Paymentvalidations.createPaymentValidationSchema),
+  validateRequest(PaymentValidations.createPaymentValidationSchema),
   PaymentControllers.initPayment,
 );
 
 router.post(
   '/success/:transactionId',
-  //   auth(USER_ROLES_OBJ.USER),
-  validateRequest(Paymentvalidations.paymentSuccessvalidationSchema),
+  validateRequest(PaymentValidations.paymentValidationSchema),
   PaymentControllers.paymentSuccess,
+);
+
+router.post(
+  '/fail/:transactionId',
+  validateRequest(PaymentValidations.paymentValidationSchema),
+  PaymentControllers.paymentFail,
 );
 
 export const PaymentRoutes = router;

@@ -21,17 +21,19 @@ const paymentSuccess = catchAsync(async (req, res) => {
 
   await PaymentServices.handlePaymentSuccess(transactionId);
 
-  // sendResponse(res, {
-  //   statusCode: status.OK,
-  //   success: true,
-  //   message: 'Payment successful',
-  //   data: result,
-  // });
-
   res.redirect(`http://localhost:5173/payment/success/${transactionId}`);
+});
+
+const paymentFail = catchAsync(async (req, res) => {
+  const { transactionId } = req.params;
+
+  await PaymentServices.handlePaymentFail(transactionId);
+
+  res.redirect(`http://localhost:5173/payment/fail/${transactionId}`);
 });
 
 export const PaymentControllers = {
   initPayment,
   paymentSuccess,
+  paymentFail,
 };
