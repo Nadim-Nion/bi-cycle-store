@@ -6,6 +6,7 @@ import notFound from './app/middlewares/notFound';
 import router from './app/routes';
 const app: Application = express();
 
+
 // Parser
 app.use(express.json());
 app.use(cookieParser());

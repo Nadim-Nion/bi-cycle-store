@@ -1,15 +1,24 @@
-import { Server } from 'http';
+import { createServer } from 'http';
+// import { createServer, Server } from 'http';
 import mongoose from 'mongoose';
 import app from './app';
 import config from './app/config';
+import initializeWebSocket from './socket/websocket';
 
-let server: Server;
+// let server: Server;
+const server = createServer(app);
 
 async function main() {
   try {
     await mongoose.connect(config.database_url as string);
 
-    server = app.listen(config.port, () => {
+    initializeWebSocket(server);
+
+    // server = app.listen(config.port, () => {
+    //   console.log(`Bi-Cycle Store app listening on port ${config.port} 😊`);
+    // });
+
+    server.listen(config.port, () => {
       console.log(`Bi-Cycle Store app listening on port ${config.port} 😊`);
     });
   } catch (err) {
