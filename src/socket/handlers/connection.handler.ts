@@ -1,22 +1,64 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
 import { IncomingMessage } from 'http';
 import { RawData, WebSocket } from 'ws';
-import handleMessage from './message.handler';
+import config from '../../app/config';
+import { verifyToken } from '../../app/modules/user/user.utils';
+import { socketManager } from '../socketManager';
 import handleDisconnect from './disconnect.handler';
+import handleMessage from './message.handler';
 
 const handleConnection = (ws: WebSocket, req: IncomingMessage) => {
   console.log('Client connected from:', req.socket?.remoteAddress);
 
-  ws.on('message', (data) => `echo: ${data}`);
-    ws.on('message', (data: RawData) => {
-      handleMessage(ws, data);
-    });
+  if (!req.url) {
+    ws.close(1008, 'Invalid request');
+    return;
+  }
 
-//   ws.on('close', () => console.log('Client disconnected'));
-    ws.on("close", () => {
-      handleDisconnect();
-    })
+  const url = new URL(req.url, 'http://localhost');
+  const token = url.searchParams.get('token');
 
-  ws.on('error', (err) => console.error('WebSocket error:', err));
+  if (!token) {
+    ws.close(1008, 'Unauthorized');
+    return;
+  }
+
+  let decoded;
+
+  try {
+    decoded = verifyToken(token, config.jwt_access_secret as string);
+
+    if (!decoded) {
+      ws.close(1008, 'Unauthorized');
+      return;
+    }
+  } catch (error) {
+    ws.close(1008, 'Unauthorized');
+    return;
+  }
+
+  const userId = decoded.id;
+
+  socketManager.add(userId, ws);
+
+  // ws.on('message', (data) => `echo: ${data}`);
+  ws.on('message', (data: RawData) => {
+    handleMessage(ws, data);
+  });
+
+  //   ws.on('close', () => console.log('Client disconnected'));
+  ws.on('close', () => {
+    handleDisconnect(userId);
+  });
+
+  ws.on('error', (err) => {
+    console.error('WebSocket error:', err);
+
+    if (ws.readyState === WebSocket.OPEN) {
+      ws.close(1011, 'Internal server error');
+    }
+  });
 };
 
 export default handleConnection;

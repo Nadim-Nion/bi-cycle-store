@@ -1,10 +1,11 @@
 import type { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
-import jwt, { type JwtPayload } from 'jsonwebtoken';
+import { type JwtPayload } from 'jsonwebtoken';
 import config from '../config';
 import AppError from '../errors/AppError';
 import type { TUserRole } from '../modules/user/user.interface';
 import { User } from '../modules/user/user.model';
+import { verifyToken } from '../modules/user/user.utils';
 import catchAsync from '../utils/catchAsync';
 
 const auth = (...requiredRoles: TUserRole[]) => {
@@ -17,10 +18,12 @@ const auth = (...requiredRoles: TUserRole[]) => {
     }
 
     // Check whether the token is valid or not
-    const decoded = jwt.verify(
+    /*  const decoded = jwt.verify(
       token,
       config.jwt_access_secret as string,
-    ) as JwtPayload;
+      ) as JwtPayload; */
+
+    const decoded = verifyToken(token, config.jwt_access_secret as string);
 
     if (!decoded) {
       throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized');

@@ -22,14 +22,14 @@ const loginUserFromDB = async (payload: TUserLogin) => {
   const { email, password } = payload;
 
   // Find the user by email
-  const exitingUser = await User.isUserExistsByEmail(email);
+  const existingUser = await User.isUserExistsByEmail(email);
 
-  if (!exitingUser) {
+  if (!existingUser) {
     throw new AppError(status.NOT_FOUND, 'User does not exist');
   }
 
   // Check the user is active or not
-  if (exitingUser && !exitingUser.isActive) {
+  if (existingUser && !existingUser.isActive) {
     throw new AppError(
       status.FORBIDDEN,
       'Your account is not active. Please contact support.',
@@ -37,7 +37,7 @@ const loginUserFromDB = async (payload: TUserLogin) => {
   }
 
   // Check the user is deleted or not
-  if (exitingUser && exitingUser.isDeleted) {
+  if (existingUser && existingUser.isDeleted) {
     throw new AppError(
       status.FORBIDDEN,
       'Your account is deleted. Please contact support.',
@@ -47,7 +47,7 @@ const loginUserFromDB = async (payload: TUserLogin) => {
   // Check the password is matched or not
   const isPasswordMatched = await User.isPasswordMatched(
     password,
-    exitingUser.password,
+    existingUser.password,
   );
 
   if (!isPasswordMatched) {
@@ -55,8 +55,9 @@ const loginUserFromDB = async (payload: TUserLogin) => {
   }
 
   const jwtPayload = {
-    email: exitingUser?.email,
-    role: exitingUser?.role ?? 'user',
+    userId: existingUser?._id?.toString(),
+    email: existingUser?.email,
+    role: existingUser?.role ?? 'user',
   };
 
   // Generate the access token
