@@ -3,7 +3,7 @@ import { createServer } from 'http';
 import mongoose from 'mongoose';
 import app from './app';
 import config from './app/config';
-import initializeWebSocket from './socket/websocket';
+import initializeWebSocket from './socket/webSocket';
 
 // let server: Server;
 const server = createServer(app);
