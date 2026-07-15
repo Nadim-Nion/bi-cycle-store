@@ -9,7 +9,7 @@ import handleDisconnect from './disconnect.handler';
 import handleMessage from './message.handler';
 
 const handleConnection = (ws: WebSocket, req: IncomingMessage) => {
-  console.log('Client connected from:', req.socket?.remoteAddress);
+  // console.log('Client connected from:', req.socket?.remoteAddress);
 
   if (!req.url) {
     ws.close(1008, 'Invalid request');
@@ -53,7 +53,7 @@ const handleConnection = (ws: WebSocket, req: IncomingMessage) => {
   });
 
   ws.on('error', (err) => {
-    console.error('WebSocket error:', err);
+    // console.error('WebSocket error:', err);
 
     if (ws.readyState === WebSocket.OPEN) {
       ws.close(1011, 'Internal server error');
